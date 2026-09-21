@@ -92,12 +92,19 @@ function statusFor(paid){
 /* ============ ACTIVITY & EXPORTS ============ */
 function recordActivity(action, entityType = 'system', entityId = null, metadata = {}) {
   // Fire and forget - don't block on this
-  db.rpc('record_activity', {
-    p_action: action,
-    p_entity_type: entityType,
-    p_entity_id: entityId,
-    p_metadata: metadata
-  }).catch(e => console.warn('Activity log failed:', e.message));
+  try {
+    const promise = db.rpc('record_activity', {
+      p_action: action,
+      p_entity_type: entityType,
+      p_entity_id: entityId,
+      p_metadata: metadata
+    });
+    if (promise && typeof promise.catch === 'function') {
+      promise.catch(e => console.warn('Activity log failed:', e.message));
+    }
+  } catch(e) {
+    console.warn('recordActivity error:', e.message);
+  }
 }
 
 async function loadActivityLogs() {
@@ -311,8 +318,10 @@ async function loadSharedState(){
 
 async function requireCommittee(){
   const {data: {user}} = await db.auth.getUser();
+  console.log('[requireCommittee] User:', user?.id);
   if (!user) throw new Error('Please sign in first.');
   const {data: member, error} = await db.from('committee_members').select('user_id,role').eq('user_id', user.id).maybeSingle();
+  console.log('[requireCommittee] Member query - data:', member, 'error:', error);
   if (error) throw error;
   if (!member) throw new Error('This account is not listed as a committee member.');
   return user;
