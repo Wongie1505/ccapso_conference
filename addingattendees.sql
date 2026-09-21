@@ -1,0 +1,74 @@
+-- -- One-time import of the existing fundraiser data.
+-- -- Run after 01_schema.sql, and run this script only once.
+
+-- insert into public.payment_methods (event_id, name, details) values
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Airtel Money', 'Line: 0995954564
+-- Name: Mike Kaumphawi'),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'TNM Mpamba', 'Line: 0899177844
+-- Name: Tamanda Kaumphawi'),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Bank transfer', 'Bank: National Bank
+-- Acc name: Tamanda Kaumphawi
+-- Acc no: 1011250048');
+
+-- insert into public.attendees (event_id, name, amount_paid)
+-- values
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Godwin Tukululu', 50000.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Montfort Geza', 50000.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Miranda Kaumphawi', 50000.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Gladys', 25000.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Richman', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Chancy Gondwe', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Eliza', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Christopher Adams', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Jack', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Jonathan', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Mercy', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Bonface', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Given', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Mirrium', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Major Nthala', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Gabriel Moyo', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Legend James', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Alfred Mwale', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Vanessa Kunyambo', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Thocco', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Happy', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Zaithwa', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Arthur Rodgers', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Emmanuel Katchenga', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Happy Kayenda', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Chisomo Chamboza', 25000.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Hope Kalumo', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Grace', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Reverend', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Sangwani', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Carol Jailosi', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Faith', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Alinafe Banda', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Roshane', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Philess Sinjeni', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Winston Makiyi', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Innocencia maonga', 70000.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Connex Jeremiah', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Linda Khalani', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Zenus Bisamu', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Ralph Nyirenda', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Emmanuel', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Shalom Amilosi', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Tendai', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Kachande', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Symon Box', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Etiness', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Charles Densan', 40000.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Martha Pwele', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Christopher Chipeta', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Rose Kondowe', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Blessings', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Ellan', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Thoko Zimkanda', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Ashely Phiri', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Ido', 0.0),
+-- ('2385ac63-99d1-4e53-9b2e-41074cd72b59', 'Flora', 0.0);
+
+-- select count(*) as payment_methods_imported from public.payment_methods where event_id = '2385ac63-99d1-4e53-9b2e-41074cd72b59';
+-- select count(*) as attendees_imported from public.attendees where event_id = '2385ac63-99d1-4e53-9b2e-41074cd72b59';
