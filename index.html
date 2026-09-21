@@ -607,8 +607,9 @@ Acc no: 1011250048</div>
     <button class="btn btn-gold" id="btnAddAttendee" style="display: none;">+ Add attendee</button>
     <button class="btn btn-gold" id="btnBulkAdd" style="display: none;">Bulk add</button>
     <button class="btn btn-gold" id="btnEditSettings" style="display: none;">Edit event details</button>
-    <button class="btn btn-gold" id="btnExportAttendees" style="display: none;">Export attendees CSV</button>
-    <button class="btn btn-gold" id="btnExportActivity" style="display: none;">Activity log</button>
+    <button class="btn btn-gold" id="btnExportAttendees" style="display: none;">Export attendees</button>
+    <button class="btn btn-gold" id="btnExportActivity" style="display: none;">View activity log</button>
+    <button class="btn btn-gold" id="btnDownload" style="display: none;">Download updated page</button>
     <button class="btn btn-ghost" id="btnAdminToggle">Committee login</button>
   </div>
 </div>
@@ -630,24 +631,6 @@ Acc no: 1011250048</div>
     <div class="modal-actions">
       <button class="btn btn-outline" id="pinCancel">Cancel</button>
       <button class="btn btn-gold" id="pinSubmit">Sign in</button>
-    </div>
-  </div>
-</div>
-
-<!-- ACTIVITY LOG MODAL -->
-<div class="modal-backdrop" id="activityModal">
-  <div class="modal" style="max-width:900px;">
-    <h3>Activity log</h3>
-    <p class="hint">Recent logins, logouts, attendee changes, event changes, and payment-method changes.</p>
-    <div class="table-wrap" style="max-height:55vh; overflow:auto;">
-      <table style="min-width:720px;">
-        <thead><tr><th>When</th><th>Who</th><th>Action</th><th>Area</th><th>Details</th></tr></thead>
-        <tbody id="activityBody"><tr><td colspan="5">Loading…</td></tr></tbody>
-      </table>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" id="activityClose">Close</button>
-      <button class="btn btn-gold" id="activityDownload">Download activity CSV</button>
     </div>
   </div>
 </div>
@@ -722,6 +705,37 @@ James Mvula"></textarea>
     </div>
   </div>
 </div>
+
+<!-- ACTIVITY LOG MODAL -->
+<div class="modal-backdrop" id="activityModal">
+  <div class="modal" style="max-height: 80vh; overflow-y: auto; width: 90%; max-width: 900px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3>Activity log</h3>
+      <button class="icon-btn" id="activityClose" aria-label="Close">✕</button>
+    </div>
+    <div style="overflow-x: auto; margin-bottom: 16px;">
+      <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <th style="padding: 8px; text-align: left;">When</th>
+            <th style="padding: 8px; text-align: left;">Who</th>
+            <th style="padding: 8px; text-align: left;">Action</th>
+            <th style="padding: 8px; text-align: left;">Area</th>
+            <th style="padding: 8px; text-align: left;">Details</th>
+          </tr>
+        </thead>
+        <tbody id="activityBody">
+          <tr><td colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="activityClose">Close</button>
+      <button class="btn btn-gold" id="activityDownload">Download as CSV</button>
+    </div>
+  </div>
+</div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="data.js"></script>
   <script src="supabase-config.js"></script>
