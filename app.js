@@ -181,7 +181,8 @@ function render(){
   document.getElementById('btnAddAttendee').style.display = isAdmin ? '' : 'none';
   document.getElementById('btnBulkAdd').style.display = isAdmin ? '' : 'none';
   document.getElementById('btnEditSettings').style.display = isAdmin ? '' : 'none';
-  document.getElementById('btnDownload').style.display = 'none';
+  document.getElementById('btnExportAttendees').style.display = isAdmin ? '' : 'none';
+  document.getElementById('btnExportActivity').style.display = isAdmin ? '' : 'none';
   document.getElementById('adminStatusText').textContent = isAdmin
     ? `Committee mode — signed in${currentUser?.email ? ` as ${currentUser.email}` : ''}`
     : "Viewing mode";
@@ -266,6 +267,95 @@ async function syncAfterSave(){
   render();
 }
 
+async function recordActivity(action, entityType = 'system', entityId = null, metadata = {}){
+  const {error} = await db.rpc('record_activity', {
+    p_action: action,
+    p_entity_type: entityType,
+    p_entity_id: entityId,
+    p_metadata: metadata
+  });
+  if (error) console.warn('Could not record activity:', error.message);
+}
+
+async function loadActivityLogs(){
+  await requireCommittee();
+  const {data, error} = await db
+    .from('activity_logs')
+    .select('id, actor_email, action, entity_type, entity_id, metadata, created_at')
+    .order('created_at', {ascending:false})
+    .limit(1000);
+  if (error) throw error;
+  return data || [];
+}
+
+function csvCell(value){
+  return `"${String(value ?? '').replaceAll('"', '""')}"`;
+}
+
+function downloadCsv(headers, rows, filename){
+  const lines = [headers.map(csvCell).join(',')];
+  rows.forEach(row => lines.push(row.map(csvCell).join(',')));
+  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportAttendeesCsv(){
+  const rows = state.attendees.map(a => {
+    const balance = balanceFor(a.paid);
+    return [a.name, state.fee, a.paid, balance, statusFor(a.paid).label];
+  });
+  downloadCsv(['Name','Fee','Amount Paid','Balance','Status'], rows, 'ccapso-attendees.csv');
+}
+
+function activityDetails(log){
+  const metadata = log.metadata || {};
+  if (log.action === 'login' || log.action === 'logout') return 'Dashboard session';
+  const value = metadata.new || metadata.old || metadata;
+  if (value && typeof value === 'object') {
+    if (value.name) return `Name: ${value.name}`;
+    if (value.title) return `Title: ${value.title}`;
+    if (value.method_name) return `Method: ${value.method_name}`;
+  }
+  return log.entity_id ? `Record: ${log.entity_id}` : '';
+}
+
+function activityRows(logs){
+  return logs.map(log => [
+    new Date(log.created_at).toLocaleString(),
+    log.actor_email || 'Unknown user',
+    log.action,
+    log.entity_type,
+    activityDetails(log)
+  ]);
+}
+
+async function showActivityLog(){
+  activityModal.classList.add('open');
+  const body = document.getElementById('activityBody');
+  body.innerHTML = '<tr><td colspan="5">Loading…</td></tr>';
+  try {
+    const logs = await loadActivityLogs();
+    activityModal.dataset.logs = JSON.stringify(logs);
+    body.innerHTML = logs.length ? logs.map(log => `<tr>
+      <td>${escapeHtml(new Date(log.created_at).toLocaleString())}</td>
+      <td>${escapeHtml(log.actor_email || 'Unknown user')}</td>
+      <td>${escapeHtml(log.action)}</td>
+      <td>${escapeHtml(log.entity_type)}</td>
+      <td>${escapeHtml(activityDetails(log))}</td>
+    </tr>`).join('') : '<tr><td colspan="5">No activity recorded yet.</td></tr>';
+  } catch(e) {
+    body.innerHTML = `<tr><td colspan="5">${escapeHtml(e.message)}</td></tr>`;
+  }
+}
+
+
 /* ============ PERSISTENCE ============ */
 async function initArtifact(){
   try{
@@ -327,9 +417,11 @@ async function persist(){
 const pinModal = document.getElementById('pinModal');
 const attendeeModal = document.getElementById('attendeeModal');
 const settingsModal = document.getElementById('settingsModal');
+const activityModal = document.getElementById('activityModal');
 
 document.getElementById('btnAdminToggle').addEventListener('click', async () => {
   if (isAdmin){
+    await recordActivity('logout', 'auth', null, {source:'dashboard'});
     await db.auth.signOut();
     return;
   }
@@ -350,6 +442,7 @@ document.getElementById('pinSubmit').addEventListener('click', async () => {
     const {error} = await db.auth.signInWithPassword({email, password});
     if (error) throw error;
     await requireCommittee();
+    await recordActivity('login', 'auth', null, {source:'dashboard'});
     pinModal.classList.remove('open');
   } catch(e) {
     await db.auth.signOut();
@@ -459,6 +552,7 @@ document.getElementById('attendeeSave').addEventListener('click', async () => {
     if (editingIndex === null) state.attendees.push({id:saved.id, name:saved.name, paid:Number(saved.amount_paid)});
     else state.attendees[editingIndex] = {id:saved.id, name:saved.name, paid:Number(saved.amount_paid)};
     attendeeModal.classList.remove('open');
+    await recordActivity(editingIndex === null ? 'create' : 'update', 'attendees', saved.id, {name});
     await syncAfterSave();
   } catch(e) { alert(e.message || 'Could not save attendee.'); }
   btn.disabled = false; btn.textContent = "Save";
@@ -468,7 +562,9 @@ document.getElementById('attendeeDelete').addEventListener('click', async () => 
   if (editingIndex === null) return;
   if (!confirm("Remove this attendee?")) return;
   try {
-    await deleteAttendeeFromSupabase(state.attendees[editingIndex].id);
+    const deletedId = state.attendees[editingIndex].id;
+    await deleteAttendeeFromSupabase(deletedId);
+    await recordActivity('delete', 'attendees', deletedId, {});
     state.attendees.splice(editingIndex, 1);
     render();
     attendeeModal.classList.remove('open');
@@ -517,6 +613,7 @@ document.getElementById('settingsSave').addEventListener('click', async () => {
 
   try {
     await saveEventToSupabase();
+    await recordActivity('update', 'events', EVENT_ID, {title:state.eventTitle, fee:state.fee});
     settingsModal.classList.remove('open');
     await syncAfterSave();
   } catch(e) { alert(e.message || 'Could not save event details.'); }
@@ -540,8 +637,18 @@ document.getElementById('btnDownload').addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 });
 
+document.getElementById('btnExportAttendees').addEventListener('click', exportAttendeesCsv);
+document.getElementById('btnExportActivity').addEventListener('click', showActivityLog);
+document.getElementById('activityClose').addEventListener('click', () => activityModal.classList.remove('open'));
+document.getElementById('activityDownload').addEventListener('click', () => {
+  try {
+    const logs = JSON.parse(activityModal.dataset.logs || '[]');
+    downloadCsv(['When','Who','Action','Area','Details'], activityRows(logs), 'ccapso-activity-log.csv');
+  } catch(e) { alert('Open the activity log first.'); }
+});
+
 /* close modals on backdrop click */
-[pinModal, attendeeModal, settingsModal, bulkModal].forEach(m => {
+[pinModal, attendeeModal, settingsModal, bulkModal, activityModal].forEach(m => {
   m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
 });
 
