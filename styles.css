@@ -141,6 +141,7 @@
     padding: 40px 24px 90px;
   }
   @media (max-width:860px){ main{padding:30px 18px 80px;} }
+  @media (max-width:480px){ main{padding:24px 16px 80px;} }
 
   .stat-row{
     display:grid;
@@ -270,6 +271,57 @@
     display:flex; align-items:center; justify-content:space-between; gap:12px;
     z-index:40; box-shadow: 0 -8px 30px rgba(0,0,0,0.25);
   }
+
+  .hamburger-wrapper{ display:none; }
+  .admin-content{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex:1;
+  }
+  .admin-buttons{
+    display:flex; gap:12px;
+  }
+
+  .hamburger-btn{
+    background:none; border:none; color:#fff; padding:8px 12px; cursor:pointer;
+    display:flex; flex-direction:column; gap:4px; align-items:center; margin-left:auto;
+  }
+  .hamburger-btn span{
+    width:22px; height:3px; background:#fff; transition:all 0.3s ease;
+    display:block; border-radius:2px;
+  }
+
+  @media (max-width:860px){
+    .hamburger-wrapper{ display:flex; order:-1; }
+    .admin-bar{ padding:10px 16px; }
+    
+    .admin-content{
+      display:none; flex-direction:column; align-items:stretch; gap:8px; width:100%;
+      margin-top:10px;
+    }
+    
+    .admin-bar.menu-open .admin-content{
+      display:flex;
+    }
+    
+    .admin-bar.menu-open .hamburger-btn span:nth-child(1){
+      transform:rotate(45deg) translateY(10px);
+    }
+    .admin-bar.menu-open .hamburger-btn span:nth-child(2){
+      opacity:0;
+    }
+    .admin-bar.menu-open .hamburger-btn span:nth-child(3){
+      transform:rotate(-45deg) translateY(-10px);
+    }
+
+    .admin-buttons{
+      flex-direction:column; gap:6px; width:100%;
+    }
+    .admin-buttons .btn{
+      font-size:12px; padding:10px 12px; width:100%;
+    }
+    .admin-buttons .left{
+      font-size:12px;
+    }
+  }
   .admin-bar .left{ display:flex; align-items:center; gap:10px; }
   .btn{
     font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600;
@@ -292,6 +344,20 @@
     background:var(--paper); color:var(--ink); border-radius:16px; width:100%; max-width:420px;
     padding:24px; font-family:'Inter',sans-serif;
     max-height: 88vh; overflow-y:auto;
+  }
+  @media (max-width:480px){
+    .modal{
+      max-width:100%; width:95vw; padding:18px; border-radius:12px;
+    }
+    .modal h3{
+      font-size:18px;
+    }
+    .modal-actions{
+      flex-direction:column;
+    }
+    .modal-actions .btn{
+      width:100%;
+    }
   }
   .modal h3{ margin:0 0 6px; font-family:'Fraunces',Georgia,serif; font-size:20px; }
   .modal p.hint{ margin:0 0 18px; font-size:13px; color:var(--ink-soft); }

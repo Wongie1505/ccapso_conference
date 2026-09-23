@@ -318,10 +318,8 @@ async function loadSharedState(){
 
 async function requireCommittee(){
   const {data: {user}} = await db.auth.getUser();
-  console.log('[requireCommittee] User:', user?.id);
   if (!user) throw new Error('Please sign in first.');
   const {data: member, error} = await db.from('committee_members').select('user_id,role').eq('user_id', user.id).maybeSingle();
-  console.log('[requireCommittee] Member query - data:', member, 'error:', error);
   if (error) throw error;
   if (!member) throw new Error('This account is not listed as a committee member.');
   return user;
@@ -670,6 +668,21 @@ if (activityDownload) activityDownload.addEventListener('click', () => {
     downloadCsv(['When', 'Who', 'Action', 'Area', 'Details'], activityRows(logs), 'ccapso-activity-log.csv');
   } catch(e) { alert('Open the activity log first.'); }
 });
+
+// Hamburger menu
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const adminBar = document.querySelector('.admin-bar');
+if (hamburgerBtn) {
+  hamburgerBtn.addEventListener('click', () => {
+    adminBar.classList.toggle('menu-open');
+  });
+  // Close menu when a button is clicked
+  [pinModal, attendeeModal, settingsModal, bulkModal].forEach(m => {
+    m.addEventListener('open.modal', () => {
+      adminBar.classList.remove('menu-open');
+    });
+  });
+}
 
 /* close modals on backdrop click */
 const modals = [pinModal, attendeeModal, settingsModal, bulkModal];

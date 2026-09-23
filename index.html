@@ -600,17 +600,27 @@ Acc no: 1011250048</div>
 
 <!-- ADMIN BAR -->
 <div class="admin-bar">
-  <div class="left sans">
-    <span id="adminStatusText">Viewing mode</span>
+  <div class="hamburger-wrapper">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
-  <div style="display:flex; gap:8px;">
-    <button class="btn btn-gold" id="btnAddAttendee" style="display: none;">+ Add attendee</button>
-    <button class="btn btn-gold" id="btnBulkAdd" style="display: none;">Bulk add</button>
-    <button class="btn btn-gold" id="btnEditSettings" style="display: none;">Edit event details</button>
-    <button class="btn btn-gold" id="btnExportAttendees" style="display: none;">Export attendees</button>
-    <button class="btn btn-gold" id="btnExportActivity" style="display: none;">View activity log</button>
-    <button class="btn btn-gold" id="btnDownload" style="display: none;">Download updated page</button>
-    <button class="btn btn-ghost" id="btnAdminToggle">Committee login</button>
+  <div class="admin-content">
+    <div class="left sans">
+      <span id="adminStatusText">Viewing mode</span>
+    </div>
+    <div class="left">Committee mode — signed in as <span id="userEmail">guest</span></div>
+    <div class="admin-buttons">
+      <button class="btn btn-gold" id="btnAddAttendee" style="display: none;">Add</button>
+      <button class="btn btn-gold" id="btnBulkAdd" style="display: none;">Bulk</button>
+      <button class="btn btn-gold" id="btnEditSettings" style="display: none;">Settings</button>
+      <button class="btn btn-gold" id="btnExportAttendees" style="display: none;">Export</button>
+      <button class="btn btn-gold" id="btnExportActivity" style="display: none;">Logs</button>
+      <button class="btn btn-gold" id="btnDownload" style="display: none;">Download</button>
+      <button class="btn btn-ghost" id="btnAdminToggle">Login</button>
+    </div>
   </div>
 </div>
 
@@ -713,15 +723,15 @@ James Mvula"></textarea>
       <h3>Activity log</h3>
       <button class="icon-btn" id="activityClose" aria-label="Close">✕</button>
     </div>
-    <div style="overflow-x: auto; margin-bottom: 16px;">
-      <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+    <div style="overflow-x: auto; margin-bottom: 16px; -webkit-overflow-scrolling: touch;">
+      <table style="width: 100%; font-size: 13px; border-collapse: collapse; min-width: 100%;">
         <thead>
-          <tr style="border-bottom: 1px solid var(--border);">
-            <th style="padding: 8px; text-align: left;">When</th>
-            <th style="padding: 8px; text-align: left;">Who</th>
-            <th style="padding: 8px; text-align: left;">Action</th>
-            <th style="padding: 8px; text-align: left;">Area</th>
-            <th style="padding: 8px; text-align: left;">Details</th>
+          <tr style="border-bottom: 1px solid var(--line);">
+            <th style="padding: 8px; text-align: left; white-space: nowrap;">When</th>
+            <th style="padding: 8px; text-align: left; white-space: nowrap;">Who</th>
+            <th style="padding: 8px; text-align: left; white-space: nowrap;">Action</th>
+            <th style="padding: 8px; text-align: left; white-space: nowrap;">Area</th>
+            <th style="padding: 8px; text-align: left; white-space: nowrap;">Details</th>
           </tr>
         </thead>
         <tbody id="activityBody">
