@@ -739,8 +739,6 @@ if (hamburgerBtn) {
 
 /* close modals on backdrop click */
 const modals = [pinModal, attendeeModal, settingsModal, bulkModal];
-const inviteModal = document.getElementById('inviteModal');
-const activityModal = document.getElementById('activityModal');
 if (inviteModal) modals.push(inviteModal);
 if (activityModal) modals.push(activityModal);
 modals.forEach(m => {
