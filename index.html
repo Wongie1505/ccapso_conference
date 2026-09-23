@@ -627,20 +627,52 @@ Acc no: 1011250048</div>
 <!-- AUTH MODAL -->
 <div class="modal-backdrop" id="pinModal">
   <div class="modal">
-    <h3>Committee login</h3>
-    <p class="hint">Sign in with your Supabase committee account.</p>
-    <div class="field">
-      <label for="loginEmail">Email address</label>
-      <input id="loginEmail" type="email" autocomplete="username" placeholder="you@example.com">
+    <!-- LOGIN TAB -->
+    <div id="loginForm">
+      <h3>Committee login</h3>
+      <p class="hint">Sign in with your committee account.</p>
+      <div class="field">
+        <label for="loginEmail">Email address</label>
+        <input id="loginEmail" type="email" autocomplete="username" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" autocomplete="current-password">
+      </div>
+      <div class="status-msg err" id="pinError"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="pinCancel">Cancel</button>
+        <button class="btn btn-gold" id="pinSubmit">Sign in</button>
+      </div>
+      <div style="text-align: center; margin-top: 12px; font-size: 13px;">
+        Don't have an account? <a href="#" id="switchToSignup" style="color: var(--gold); text-decoration: none; cursor: pointer;">Create one</a>
+      </div>
     </div>
-    <div class="field">
-      <label for="loginPassword">Password</label>
-      <input id="loginPassword" type="password" autocomplete="current-password">
-    </div>
-    <div class="status-msg err" id="pinError"></div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" id="pinCancel">Cancel</button>
-      <button class="btn btn-gold" id="pinSubmit">Sign in</button>
+
+    <!-- SIGNUP TAB -->
+    <div id="signupForm" style="display: none;">
+      <h3>Create account</h3>
+      <p class="hint">Sign up to manage the event. Your account will be verified before you can access the dashboard.</p>
+      <div class="field">
+        <label for="signupEmail">Email address</label>
+        <input id="signupEmail" type="email" autocomplete="username" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Min 6 characters">
+      </div>
+      <div class="field">
+        <label for="signupConfirm">Confirm password</label>
+        <input id="signupConfirm" type="password" autocomplete="new-password" placeholder="Repeat password">
+      </div>
+      <div class="status-msg err" id="signupError"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="signupCancel">Cancel</button>
+        <button class="btn btn-gold" id="signupSubmit">Create account</button>
+      </div>
+      <div style="text-align: center; margin-top: 12px; font-size: 13px;">
+        Already have an account? <a href="#" id="switchToLogin" style="color: var(--gold); text-decoration: none; cursor: pointer;">Sign in</a>
+      </div>
     </div>
   </div>
 </div>

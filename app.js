@@ -515,6 +515,84 @@ document.getElementById('pinSubmit').addEventListener('click', async () => {
 });
 ['loginEmail','loginPassword'].forEach(id => document.getElementById(id).addEventListener('keydown', (e)=>{ if(e.key==='Enter') document.getElementById('pinSubmit').click(); }));
 
+// Signup functionality
+document.getElementById('signupSubmit').addEventListener('click', async () => {
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const confirm = document.getElementById('signupConfirm').value;
+  const btn = document.getElementById('signupSubmit');
+  const errorDiv = document.getElementById('signupError');
+  
+  errorDiv.textContent = '';
+  
+  if (!email || !password) {
+    errorDiv.textContent = "Email and password are required.";
+    return;
+  }
+  if (password.length < 6) {
+    errorDiv.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+  if (password !== confirm) {
+    errorDiv.textContent = "Passwords don't match.";
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = "Creating account…";
+  
+  try {
+    const {error} = await db.auth.signUp({email, password});
+    if (error) throw error;
+    
+    errorDiv.textContent = '';
+    errorDiv.className = 'status-msg ok';
+    errorDiv.textContent = 'Account created! Check your email to verify your address. We will enable your access after verification.';
+    
+    // Clear form
+    setTimeout(() => {
+      document.getElementById('signupEmail').value = '';
+      document.getElementById('signupPassword').value = '';
+      document.getElementById('signupConfirm').value = '';
+      document.getElementById('switchToLogin').click();
+    }, 3000);
+    
+  } catch(e) {
+    errorDiv.textContent = e.message || "Signup failed.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Create account";
+  }
+});
+
+// Tab switching
+document.getElementById('switchToSignup').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('signupForm').style.display = 'block';
+  document.getElementById('pinError').textContent = '';
+});
+
+document.getElementById('switchToLogin').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('signupForm').style.display = 'none';
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('signupError').textContent = '';
+});
+
+// Close modal buttons
+document.getElementById('pinCancel').addEventListener('click', () => {
+  pinModal.classList.remove('open');
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('signupForm').style.display = 'none';
+});
+
+document.getElementById('signupCancel').addEventListener('click', () => {
+  pinModal.classList.remove('open');
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('signupForm').style.display = 'none';
+});
+
 function openAttendeeModal(index){
   editingIndex = index;
   document.getElementById('attendeeError').textContent = "";
