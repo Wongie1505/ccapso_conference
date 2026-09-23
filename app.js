@@ -188,7 +188,57 @@ async function showActivityLog() {
   }
 }
 
-/* ============ RENDER ============ */
+/* ============ INVITE FLOW ============ */
+async function handleInviteFlow() {
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const type = params.get('type');
+  
+  if (type === 'invite') {
+    console.log('Invite flow detected');
+    // User clicked invite link, token is in URL
+    // Show password setup modal
+    const modal = document.getElementById('inviteModal');
+    if (modal) {
+      modal.classList.add('open');
+      document.getElementById('inviteSetup').focus();
+    }
+  }
+}
+
+document.getElementById('inviteSubmit')?.addEventListener('click', async () => {
+  const password = document.getElementById('inviteSetup').value;
+  const btn = document.getElementById('inviteSubmit');
+  
+  if (!password || password.length < 6) {
+    document.getElementById('inviteError').textContent = "Password must be at least 6 characters.";
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = "Setting up…";
+  
+  try {
+    const {error} = await db.auth.updateUser({password});
+    if (error) throw error;
+    
+    // Session should be active, close modal and continue
+    document.getElementById('inviteModal').classList.remove('open');
+    recordActivity('invite_accepted', 'auth', null, {});
+    render();
+  } catch(e) {
+    document.getElementById('inviteError').textContent = e.message || "Setup failed.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Set password";
+  }
+});
+
+document.getElementById('inviteCancel')?.addEventListener('click', () => {
+  document.getElementById('inviteModal').classList.remove('open');
+  db.auth.signOut();
+});
+
 function render(){
   // hero facts
   const heroFacts = document.getElementById('heroFacts');
@@ -686,6 +736,9 @@ if (hamburgerBtn) {
 
 /* close modals on backdrop click */
 const modals = [pinModal, attendeeModal, settingsModal, bulkModal];
+const inviteModal = document.getElementById('inviteModal');
+const activityModal = document.getElementById('activityModal');
+if (inviteModal) modals.push(inviteModal);
 if (activityModal) modals.push(activityModal);
 modals.forEach(m => {
   m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
@@ -694,6 +747,7 @@ modals.forEach(m => {
 /* ============ INIT ============ */
 
 (async function init(){
+  handleInviteFlow();
   try {
     const {data: {session}} = await db.auth.getSession();
     currentUser = session?.user || null;

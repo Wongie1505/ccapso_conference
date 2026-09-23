@@ -716,6 +716,22 @@ James Mvula"></textarea>
   </div>
 </div>
 
+<!-- INVITE PASSWORD SETUP MODAL -->
+<div class="modal-backdrop" id="inviteModal">
+  <div class="modal">
+    <h3>Set your password</h3>
+    <p style="color: var(--secondary); margin-bottom: 16px; font-size: 14px;">
+      You've been invited to join the committee. Set a password to access the dashboard.
+    </p>
+    <input type="password" id="inviteSetup" placeholder="Password (min 6 characters)" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:8px; margin-bottom:12px; font-family:inherit; font-size:14px;">
+    <div id="inviteError" style="color:var(--error); font-size:12px; margin-bottom:12px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="inviteCancel">Cancel</button>
+      <button class="btn btn-gold" id="inviteSubmit">Set password</button>
+    </div>
+  </div>
+</div>
+
 <!-- ACTIVITY LOG MODAL -->
 <div class="modal-backdrop" id="activityModal">
   <div class="modal" style="max-height: 80vh; overflow-y: auto; width: 90%; max-width: 900px;">
