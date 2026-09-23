@@ -222,6 +222,9 @@ document.getElementById('inviteSubmit')?.addEventListener('click', async () => {
     const {error} = await db.auth.updateUser({password});
     if (error) throw error;
     
+    // Clear the invite token from URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
     // Session should be active, close modal and continue
     document.getElementById('inviteModal').classList.remove('open');
     recordActivity('invite_accepted', 'auth', null, {});
@@ -723,15 +726,15 @@ if (activityDownload) activityDownload.addEventListener('click', () => {
 const hamburgerBtn = document.getElementById('hamburgerBtn');
 const adminBar = document.querySelector('.admin-bar');
 if (hamburgerBtn) {
-  hamburgerBtn.addEventListener('click', () => {
+  const toggleMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     adminBar.classList.toggle('menu-open');
-  });
-  // Close menu when a button is clicked
-  [pinModal, attendeeModal, settingsModal, bulkModal].forEach(m => {
-    m.addEventListener('open.modal', () => {
-      adminBar.classList.remove('menu-open');
-    });
-  });
+  };
+  hamburgerBtn.addEventListener('click', toggleMenu);
+  hamburgerBtn.addEventListener('touchend', toggleMenu);
+} else {
+  console.warn('Hamburger button not found');
 }
 
 /* close modals on backdrop click */
